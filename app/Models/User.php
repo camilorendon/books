@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Lend;
+use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -24,6 +25,7 @@ class User extends Authenticatable
         'status'
     ];
 
+    protected $append=['full_name'];
 
     protected $hidden = [
         'password',
@@ -31,10 +33,34 @@ class User extends Authenticatable
     ];
 
 
-    // protected $casts = [
-    //     'email_verified_at' => 'datetime',
-    // ];
+    protected $casts = [
+        'created_at' => 'datetime:Y-m-d',
+        'updated_at' => 'datetime:Y-m-d'
+    ];
 
+
+
+    /*
+        Accesor (get)
+        User::query()-> getFullNameAttribute()->get()
+    {
+    */
+    public function getFullNameAttribute()
+    {
+        return "{this->name} {this->last_name}"; //camilo rendon
+    }
+
+
+    //mutadores
+    //(new User($request->all()))->save(); Así se crearían los registros
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password']=bcrypt($value);
+    }
+    public function setRememberTokenAttribute()
+    {
+        $this->attributes['remember_token']= Str::random(30);
+    }
 
 
     public function customer()
@@ -46,5 +72,6 @@ class User extends Authenticatable
     {
         return $this->hasMany(Lend::class, 'owner_id', 'id');
     }
+
 
 }
