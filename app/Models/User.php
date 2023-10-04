@@ -22,10 +22,9 @@ class User extends Authenticatable
         'last_name',
         'email',
         'password',
-        'status'
     ];
 
-    protected $append=['full_name'];
+    protected $appends = ['full_name'];
 
     protected $hidden = [
         'password',
@@ -47,7 +46,8 @@ class User extends Authenticatable
     */
     public function getFullNameAttribute()
     {
-        return "{this->name} {this->last_name}"; //camilo rendon
+    // return $this->name . ' ' . $this->last_name; //Camilo Rendon
+    return "{$this->name} {$this->last_name}"; //Camilo Rendon
     }
 
 
