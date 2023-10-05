@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthorController;
+use App\Http\Controllers\AuthUserApiController;
 use App\Http\Controllers\CategoryController;
 
 /*
@@ -54,4 +55,24 @@ Route::group(['prefix' =>'categories', 'controller' => CategoryController::class
     Route::post('/', 'store');
     Route::put('/{category}', 'update');
     Route::delete('/{category}', 'destroy');
+});
+
+Route::post('/login', [AuthUserApiController::class, 'login']);
+Route::post('/register', [UserController::class, 'store']);
+
+
+/* The `Route::group(['middleware' =>['auth:sanctum']], function(){})` is creating a group of routes
+that require authentication using the Sanctum middleware. This means that any routes defined within
+this group can only be accessed by authenticated users. */
+Route::group(['middleware' =>['auth:sanctum']], function(){
+    Route::post('/logout', [AuthUserApiController::class, 'logout']);
+    Route::get('/profile', [AuthUserApiController::class, 'profile']);
+
+    Route::group(['prefix' =>'users', 'controller' => UserController::class], function(){
+        Route::get('/', 'index');
+        Route::get('/{user}', 'show');
+        Route::post('/', 'store');
+        Route::put('/{user}', 'update');
+        Route::delete('/{user}', 'destroy');
+    });
 });

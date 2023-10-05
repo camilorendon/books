@@ -31,6 +31,15 @@ class UserRequest extends FormRequest
             array_push($rules['email'], 'unique:users,email,' . $this->user->id);
             array_push($rules['password'], 'nullable');
         }
+
+        /* The code `if(->path() !='api/register')` is checking if the current request path is not
+        equal to `'api/register'`. If it is not equal, it means that the request is not for the
+        registration endpoint. */
+        // if($this->path() !='api/register'){
+        //     $rules['role_name'] = ['required', 'string'];
+        // }
+
+
         return $rules;
     }
     public function messages()
